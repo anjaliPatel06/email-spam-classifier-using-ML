@@ -6,7 +6,7 @@ import re
 import string
 import nltk
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
+from nltk.stem.porter import PorterStemmer
 nltk.download('stopwords')
 
 app = FastAPI()
@@ -21,7 +21,6 @@ model = pickle.load(open(os.path.join(BASE_DIR, "backend/model/nb_model.pkl"), "
 vectorizer = pickle.load(open(os.path.join(BASE_DIR, "backend/model/tfidf.pkl"), "rb"))
 
 
-# preprocess the email
 ps = PorterStemmer()
 stop_words = set(stopwords.words('english'))
 
@@ -35,6 +34,8 @@ def clean_text(text):
     words = [ps.stem(word) for word in words if word not in stop_words]
     
     return " ".join(words)
+
+
 
 @app.get('/')
 def home():
@@ -51,3 +52,7 @@ def predict(request:EmailRequest):
         "message":email,
         "prediction" : "spam" if prediction == 1 else "ham"
     }
+print(vectorizer.vocabulary_.get("free"))
+print(vectorizer.vocabulary_.get("win"))
+print(vectorizer.vocabulary_.get("ticket"))
+
